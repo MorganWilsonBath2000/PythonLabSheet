@@ -6,7 +6,7 @@ print("connected to database")
 cursor = db.cursor()
 
 # creating tables
-cursor.execute("CREATE TABLE IF NOT EXISTS flight (flightID VARCHAR(6) PRIMARY KEY, destinationID VARCHAR(3) NOT NULL REFERENCES destination, pilotID VARCHAR(6) REFERENCES pilot, departure DATE NOT NULL, flightStatus VARCHAR(10) NOT NULL)")
+cursor.execute("CREATE TABLE IF NOT EXISTS flight (flightID VARCHAR(6) PRIMARY KEY, destinationID VARCHAR(3) NOT NULL REFERENCES destination, pilotID VARCHAR(6) REFERENCES pilot, departureDate DATE NOT NULL, flightStatus VARCHAR(10) NOT NULL)")
 cursor.execute("CREATE TABLE IF NOT EXISTS pilot (pilotID VARCHAR(6) PRIMARY KEY, pilotName VARCHAR(20) NOT NULL)")
 cursor.execute("CREATE TABLE IF NOT EXISTS destination (destinationID VARCHAR(3) PRIMARY KEY, destinationCity VARCHAR(20) NOT NULL, destinationCountry VARCHAR(20) NOT NULL)")
 db.commit()
@@ -90,16 +90,20 @@ db.commit()
 
 # Flight Retrieval
 # SELECT * FROM flight WHERE pilotID = 'MW463' AND flightStatus = 'Cancelled'
-# SELECT * FROM flight WHERE 
+# SELECT * FROM flight WHERE destinationID = 'MLE' and departure = '2025/12/25'
 
-# Schedule Modification
-# 
+# Flight Schedule Modification
+# UPDATE flight SET flightStatus = 'Arrived' WHERE flightID = 'RF156'
 
 # Pilot Assignment
-# 
+# UPDATE flight SET pilotID = 'BBB' WHERE flightID = 'JB007'
 
 # Destination Management
-# cursor.execute("INSERT INTO destination VALUES ('','','')")
+# SELECT * FROM flight WHERE destinationID
+# SELECT * FROM flight, destination WHERE destination.destinationCountry = 'United States' AND flight.destinationID = destination.destinationID
+# INSERT INTO destination VALUES ('LGW','London','United Kingdown')
 
 # Data Summary
-# SELECT COUNT FROM flight GROUP BY destination
+# SELECT destinationID,  COUNT(flightID) FROM flight GROUP BY destinationID SORT BY ASC
+# SELECT pilotID, pilotName, COUNT(flightID) FROM flight,pilot GROUP BY destinationID
+# SELECT * FROM flight WHERE departureDate = '2025/12/25'
