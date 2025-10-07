@@ -1,108 +1,14 @@
 import argparse
 import sqlite3
+
 db = sqlite3.connect('airlineDb')
-print("Database created")
+print("connected to database")
 
 cursor = db.cursor()
 
-# creating tables
-cursor.execute("CREATE TABLE IF NOT EXISTS flight (flightNumber VARCHAR(6) PRIMARY KEY, destinationID VARCHAR(3) NOT NULL REFERENCES destination, pilotID VARCHAR(6) REFERENCES pilot, departure DATE NOT NULL, flightStatus VARCHAR(10) NOT NULL)")
-cursor.execute("CREATE TABLE IF NOT EXISTS pilot (pilotID VARCHAR(6) PRIMARY KEY)")
-cursor.execute("CREATE TABLE IF NOT EXISTS destination (destinationID VARCHAR(3) PRIMARY KEY, destinationCity VARCHAR(20), destinationCountry VARCHAR(20))")
-db.commit()
-# inserting flight values
-cursor.execute("INSERT INTO flight VALUES ('QF3868','DEL','BBB','2025-10-05','Scheduled')")
-cursor.execute("INSERT INTO flight VALUES ('KN827','CAN','RY9','2025-10-06','Scheduled')")
-cursor.execute("INSERT INTO flight VALUES ('SB140','JFK','AW20','2025-10-07','Cancelled')")
-cursor.execute("INSERT INTO flight VALUES ('QF2432','AMS','CR7','2025-10-08','Scheduled')")
-cursor.execute("INSERT INTO flight VALUES ('RF156','MAD','LM10','2025-12-09','Scheduled')")
-cursor.execute("INSERT INTO flight VALUES ('PL908','FRA','DH18','2025-10-10','Scheduled')")
-cursor.execute("INSERT INTO flight VALUES ('XG2234','SIN','MJ','2025-10-11','Delayed')")
-cursor.execute("INSERT INTO flight VALUES ('VC4352','ICN','JPM14','2025-11-12','Scheduled')")
-cursor.execute("INSERT INTO flight VALUES ('JQ273','PEK','WH19','2025-10-13','Scheduled')")
-cursor.execute("INSERT INTO flight VALUES ('UN2892','BCN','DH1','2025-10-14','Scheduled')")
-cursor.execute("INSERT INTO flight VALUES ('QF18','CDG','BBB','2025-10-15','In-Air')")
-cursor.execute("INSERT INTO flight VALUES ('QF3354','SYD','RY9','2025-11-16','Scheduled')")
-cursor.execute("INSERT INTO flight VALUES ('JK090','FCO','AW20','2025-10-17','Scheduled')")
-cursor.execute("INSERT INTO flight VALUES ('JB007','MLE','CR7','2025-10-18','Diverted')")
-cursor.execute("INSERT INTO flight VALUES ('FR2104','SYD','LM10','2025-10-19','Arrived')")
-cursor.execute("INSERT INTO flight VALUES ('PL722','ATL','MW463','2026-10-20','Cancelled')")
-cursor.execute("INSERT INTO flight VALUES ('VF4','DXB','LW47','2025-12-21','Scheduled')")
-cursor.execute("INSERT INTO flight VALUES ('DC243','MLE','MG6','2025-10-22','Scheduled')")
-cursor.execute("INSERT INTO flight VALUES ('FR243','IST','MX5','2025-10-23','Scheduled')")
-cursor.execute("INSERT INTO flight VALUES ('BA7707','LHR','YP10','2026-03-24','Delayed')")
-cursor.execute("INSERT INTO flight VALUES ('FR99','AMS','EN9','2025-10-25','Scheduled')")
-cursor.execute("INSERT INTO flight VALUES ('SL090','MAD','BS24','2025-10-26','Scheduled')")
-cursor.execute("INSERT INTO flight VALUES ('LH054','FRA','DH1','2025-10-27','Scheduled')")
-cursor.execute("INSERT INTO flight VALUES ('CP98','SIN','DM2','2025-12-28','In-Air')")
-cursor.execute("INSERT INTO flight VALUES ('HN7777','ICN','MG6','2025-10-29','Scheduled')")
 
-# inserting pilot values
-cursor.execute("INSERT INTO pilot VALUES ('MW463')")
-cursor.execute("INSERT INTO pilot VALUES ('LW47')")
-cursor.execute("INSERT INTO pilot VALUES ('BBB')")
-cursor.execute("INSERT INTO pilot VALUES ('RY9')")
-cursor.execute("INSERT INTO pilot VALUES ('AW20')")
-cursor.execute("INSERT INTO pilot VALUES ('CR7')")
-cursor.execute("INSERT INTO pilot VALUES ('LM10')")
-cursor.execute("INSERT INTO pilot VALUES ('DH18')")
-cursor.execute("INSERT INTO pilot VALUES ('MJ')")
-cursor.execute("INSERT INTO pilot VALUES ('JPM14')")
-cursor.execute("INSERT INTO pilot VALUES ('WH19')")
-cursor.execute("INSERT INTO pilot VALUES ('DH1')")
-cursor.execute("INSERT INTO pilot VALUES ('DM2')")
-cursor.execute("INSERT INTO pilot VALUES ('MG6')")
-cursor.execute("INSERT INTO pilot VALUES ('MX5')")
-cursor.execute("INSERT INTO pilot VALUES ('CR26')")
-cursor.execute("INSERT INTO pilot VALUES ('IS7')")
-cursor.execute("INSERT INTO pilot VALUES ('YP10')")
-cursor.execute("INSERT INTO pilot VALUES ('EN9')")
-cursor.execute("INSERT INTO pilot VALUES ('BS24')")
-
-# inserting destination values
-cursor.execute("INSERT INTO destination VALUES ('ATL','Atlanta','United States')")
-cursor.execute("INSERT INTO destination VALUES ('DXB','Dubai','Dubai')")
-cursor.execute("INSERT INTO destination VALUES ('DFW','Dallas','United States')")
-cursor.execute("INSERT INTO destination VALUES ('IST','Istanbul','Turkey')")
-cursor.execute("INSERT INTO destination VALUES ('LAX','Los Angeles','United States')")
-cursor.execute("INSERT INTO destination VALUES ('DEL','Delhi','India')")
-cursor.execute("INSERT INTO destination VALUES ('CAN','Guangazhou','China')")
-cursor.execute("INSERT INTO destination VALUES ('JFK','New York','United States')")
-cursor.execute("INSERT INTO destination VALUES ('AMS','Amsterdam','Netherlands')")
-cursor.execute("INSERT INTO destination VALUES ('MAD','Madrid','Spain')")
-cursor.execute("INSERT INTO destination VALUES ('FRA','Frankfurt','Germany')")
-cursor.execute("INSERT INTO destination VALUES ('SIN','Singapore','Singapore')")
-cursor.execute("INSERT INTO destination VALUES ('ICN','Seoul','South Korea')")
-cursor.execute("INSERT INTO destination VALUES ('PEK','Beijing','China')")
-cursor.execute("INSERT INTO destination VALUES ('BCN','Barcelona','Spain')")
-cursor.execute("INSERT INTO destination VALUES ('CDG','Paris','France')")
-cursor.execute("INSERT INTO destination VALUES ('LHR','London','United Kingdom')")
-cursor.execute("INSERT INTO destination VALUES ('FCO','Rome','Italy')")
-cursor.execute("INSERT INTO destination VALUES ('MLE','Malé','Maldives')")
-cursor.execute("INSERT INTO destination VALUES ('SYD','Sydney','Australia')")
-
-# SQL Queries
-
-# Flight Retrieval
-# SELECT * FROM flight WHERE pilotID = 'MW463' AND flightStatus = 'Cancelled'
-# SELECT * FROM flight WHERE 
-
-# Schedule Modification
-#
-
-# Pilot Assignment
-# 
-
-# Destination Management
-# cursor.execute("INSERT INTO destination VALUES ('','','')")
-
-# Data Summary
-# SELECT COUNT FROM flight GROUP BY destination
-
-# commands
-def view_flights(args):
-    cursor.execute()
-
+def dbConnect():
+    return sqlite3.connect('airlineDb')
 
 # set up of command line interface:
 def main():
@@ -117,7 +23,51 @@ def main():
     view_parser = subparsers.add_parser("view", help="use to view information from database")
     view_parser.add_argument("--flightID", help="flight to view")
 
+    # subparser to do update commands
+    update_parser = subparsers.add_parser("update", help="update commands: -fp [flightID] [pilotID] to update pilot \n -fd")
+    update_parser.add_argument("-fp", nargs=2)
+    update_parser.add_argument("-fd", nargs=2)
+    update_parser.add_argument("-fs", nargs=2)
+    update_parser.add_argument("-fdd", nargs=2)
 
+    args = parser.parse_args()
+    print("Menu: to update pilot use: update -fp [flightID] [pilotID] \n to update destination use: update -fd [flightID] [destinationID] \n to update flight status use: update -fs [flightID] [flightStatus] \n to update flight departure date (ensure departure date is in YYYY/MM/DD format) use: update -fdd [flightID] [departure] ")
+    #commands
+
+    if args.command == "update":
+        if args.fp:
+            
+            cursor.execute(f"UPDATE flight SET pilotID = '{args.fp[1]}' WHERE flightID = '{args.fp[0]}'")
+            print(f"updated flight '{args.fp[0]}' with new pilot '{args.fp[1]}'")
+            
+
+        elif args.fd:
+            
+            cursor.execute(f"UPDATE flight SET destinationID = '{args.fd[1]}' WHERE flightID = '{args.fd[0]}'")
+            print(f"updated flight '{args.fd[0]}' with new destination '{args.fd[1]}'")
+            db.commit()
+        elif args.fs:
+            
+            cursor.execute(f"UPDATE flight SET flightStatus = '{args.fs[1]}' WHERE flightID = '{args.fs[0]}'")
+            print(f"updated flight '{args.fs[0]}' with new flight status '{args.fs[1]}'")
+            db.commit()
+        elif args.fdd:
+            cursor.execute(f"UPDATE flight SET departure = '{args.fdd[0]}' WHERE flightID = '{args.fdd[0]}'")
+            db.commit()
+            results = cursor.execute(f"SELECT * FROM flight WHERE flightID = '{args.fdd[1]}'")
+            for row in results:
+                print("FlightID: ", row[0])
+                print("Destination: ", row[1])
+                print("Pilot ID: ", row[2])
+                print("Departure Date: ", row[3])
+                print("Flight Status: ", row[4])
+            
+            # print(f"updated flight '{args.fdd[1]}' with new departure date '{args.fdd[0]}'")
+            # db.close()
+
+
+
+        
 
     #parser.add_argument("-f","--flightNumber", type=str, help="Enter flightID of flight to amend")
     #parser.add_argument("-d","--destinationID", type=str, help="enter new destination")
@@ -125,7 +75,7 @@ def main():
     #parser.add_argument("-dep","--departure", type=str, help="enter new departure date")
     #parser.add_argument("-fs","--flightStatus", type=str, help="enter new flight status")
     
-    args = parser.parse_args()
+    
     #cursor.execute(f"SELECT * FROM flight WHERE flightNumber = '{args.flightNumber}'")
     #results = cursor.fetchall()
     #for row in results:
