@@ -101,7 +101,6 @@ db.commit()
 
 # Destination Management
 # SELECT * FROM flight WHERE destinationID = 'MLE'
-# SELECT * FROM flight, destination WHERE destination.destinationCountry = 'United States' AND flight.destinationID = destination.destinationID
 # INSERT INTO destination VALUES ('LGW','London','United Kingdown')
 
 # Data Summary

@@ -1,0 +1,25 @@
+SQL Queries
+
+Create:
+
+
+Read:
+SELECT * FROM flight WHERE flightID = x AND pilotID = x AND destinationID = x AND departureDate = x AND flightStatus = x
+SELECT * FROM flight WHERE pilotID = x AND destinationID = x
+
+Update:
+cursor.execute(f"UPDATE flight SET pilotID = '{args.fp[1]}' WHERE flightID = '{args.fp[0]}'")
+cursor.execute(f"UPDATE flight SET destinationID = '{args.fd[1]}' WHERE flightID = '{args.fd[0]}'")
+cursor.execute(f"UPDATE flight SET flightStatus = '{args.fs[1]}' WHERE flightID = '{args.fs[0]}'")
+cursor.execute(f"UPDATE flight SET departureDate = '{args.fdd[1]}' WHERE flightID = '{args.fdd[0]}'")
+cursor.execute(f"UPDATE pilot SET pilotName = '{args.pn[1] + " " + args.pn[2]}' WHERE pilotID = '{args.pn[0]}'")
+
+Delete:
+DELETE from flight WHERE flightID = '{args.f[0]}'
+DELETE FROM pilot WHERE pilotID = '{args.p[0]}'
+DELETE from destination WHERE destinationID = '{args.d[0]}'
+
+Data Summary Queries:
+SELECT destinationID,  COUNT(flightID) FROM flight GROUP BY destinationID SORT BY ASC
+SELECT pilotID, pilotName, COUNT(flightID) FROM flight,pilot GROUP BY destinationID
+SELECT * FROM flight WHERE departureDate = '2025/12/25'
