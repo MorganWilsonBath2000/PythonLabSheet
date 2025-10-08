@@ -85,25 +85,3 @@ cursor.execute("INSERT OR IGNORE INTO destination VALUES ('MLE','Malé','Maldive
 cursor.execute("INSERT OR IGNORE INTO destination VALUES ('SYD','Sydney','Australia')")
 
 db.commit()
-
-# SQL Queries
-
-# Flight Retrieval
-# SELECT * FROM flight WHERE pilotID = 'MW463' AND flightStatus = 'Cancelled'
-# SELECT * FROM flight WHERE destinationID = 'MLE' and departure = '2025/12/25'
-# SELECT
-
-# Flight Schedule Modification
-# UPDATE flight SET flightStatus = 'Arrived' WHERE flightID = 'RF156'
-
-# Pilot Assignment
-# UPDATE flight SET pilotID = 'BBB' WHERE flightID = 'JB007'
-
-# Destination Management
-# SELECT * FROM flight WHERE destinationID = 'MLE'
-# INSERT INTO destination VALUES ('LGW','London','United Kingdown')
-
-# Data Summary
-# SELECT destinationID,  COUNT(flightID) FROM flight GROUP BY destinationID SORT BY ASC
-# SELECT pilotID, pilotName, COUNT(flightID) FROM flight,pilot GROUP BY destinationID
-# SELECT * FROM flight WHERE departureDate = '2025/12/25'
