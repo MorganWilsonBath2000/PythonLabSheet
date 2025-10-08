@@ -77,7 +77,41 @@ def main():
     
     #commands
 
-    if args.command == "view":
+    
+
+    if args.command == "add":
+        if args.f:
+            cursor.execute(f"INSERT INTO flight VALUES ('{args.f[0]}','{args.f[1]}','{args.f[2]}','{args.f[3]}','{args.f[4]}')")
+            db.commit()
+            print("Confirming update...")
+            results = cursor.execute(f"SELECT * FROM flight WHERE flightID = '{args.f[0]}'")
+            for row in results:
+                print("Flight ID: ", row[0])
+                print("Destination ID: ", row[1])
+                print("Pilot ID: ", row[2])
+                print("Departure Date: ", row[3])
+                print("Flight Status: ", row[4])
+        elif args.d:
+            cursor.execute(f"INSERT INTO destination VALUES ('{args.d[0]}','{args.d[1]}','{args.d[2]}')")
+            db.commit()
+            print("Confirming update...")
+            results = cursor.execute(f"SELECT * FROM destination WHERE destinationID = '{args.d[0]}'")
+            for row in results:
+                print("Destination ID: ", row[0])
+                print("Destination City: ", row[1])
+                print("Destination Country: ", row[2])
+        elif args.p:        
+            cursor.execute(f"INSERT INTO pilot VALUES ('{args.p[0]}','{args.p[1] + " " + args.p[2]}')")
+            db.commit()
+            print("Confirming update...")
+            results = cursor.execute(f"SELECT * FROM pilot WHERE pilotID = '{args.p[0]}'")
+            for row in results:
+                print("Pilot ID: ", row[0])
+                print("Pilot Name: ", row[1])
+        else:
+            print(createMenu)
+
+    elif args.command == "view":
 
         if args.sd:
             # summary by destiantion
@@ -116,37 +150,6 @@ def main():
             except:
                 print(readMenu)
 
-    elif args.command == "add":
-        if args.f:
-            cursor.execute(f"INSERT INTO flight VALUES ('{args.f[0]}','{args.f[1]}','{args.f[2]}','{args.f[3]}','{args.f[4]}')")
-            db.commit()
-            print("Confirming update...")
-            results = cursor.execute(f"SELECT * FROM flight WHERE flightID = '{args.f[0]}'")
-            for row in results:
-                print("Flight ID: ", row[0])
-                print("Destination ID: ", row[1])
-                print("Pilot ID: ", row[2])
-                print("Departure Date: ", row[3])
-                print("Flight Status: ", row[4])
-        elif args.d:
-            cursor.execute(f"INSERT INTO destination VALUES ('{args.d[0]}','{args.d[1]}','{args.d[2]}')")
-            db.commit()
-            print("Confirming update...")
-            results = cursor.execute(f"SELECT * FROM destination WHERE destinationID = '{args.d[0]}'")
-            for row in results:
-                print("Destination ID: ", row[0])
-                print("Destination City: ", row[1])
-                print("Destination Country: ", row[2])
-        elif args.p:        
-            cursor.execute(f"INSERT INTO pilot VALUES ('{args.p[0]}','{args.p[1] + " " + args.p[2]}')")
-            db.commit()
-            print("Confirming update...")
-            results = cursor.execute(f"SELECT * FROM pilot WHERE pilotID = '{args.p[0]}'")
-            for row in results:
-                print("Pilot ID: ", row[0])
-                print("Pilot Name: ", row[1])
-        else:
-            print(createMenu)
     elif args.command == "update":
         if args.fp:
             cursor.execute(f"UPDATE flight SET pilotID = '{args.fp[1]}' WHERE flightID = '{args.fp[0]}'")
@@ -223,6 +226,8 @@ def main():
     
     else:
         print(intro)
+
+    db.close()
 
 #ensures that script can run smoothly when closed and reopened
 if __name__ == "__main__":

@@ -1,7 +1,9 @@
 SQL Queries
 
 Create:
-
+INSERT INTO flight VALUES ('{args.f[0]}','{args.f[1]}','{args.f[2]}','{args.f[3]}','{args.f[4]}')
+INSERT INTO destination VALUES ('{args.d[0]}','{args.d[1]}','{args.d[2]}')
+INSERT INTO pilot VALUES ('{args.p[0]}','{args.p[1] + " " + args.p[2]}')
 
 Read:
 SELECT * FROM flight WHERE flightID = x AND pilotID = x AND destinationID = x AND departureDate = x AND flightStatus = x
