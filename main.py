@@ -118,7 +118,6 @@ def main():
             results = cursor.execute("SELECT destinationID,COUNT(flightID) FROM flight GROUP BY destinationID ORDER BY COUNT(flightID) DESC")
             for row in results:
                 print(row)
-            print("Error: " + e + "\n" + readMenu)
         #summary by pilot
         elif args.sp:
             results = cursor.execute("SELECT pilotID,COUNT(pilotID) FROM flight GROUP BY pilotID ORDER BY pilotID ASC")
@@ -217,14 +216,20 @@ def main():
         if args.f:
             cursor.execute(f"DELETE from flight WHERE flightID = '{args.f[0]}'")
             db.commit()
+            print(f"Confirming update...")
+            print(f"Flight {args.f[0]} deleted.")
         # delete pilot
         elif args.p:
             cursor.execute(f"DELETE FROM pilot WHERE pilotID = '{args.p[0]}'")
-            db.commit()    
+            db.commit()
+            print(f"Confirming update...")
+            print(f"Pilot {args.p[0]} deleted.")    
         # delete destination
         elif args.d:
             cursor.execute(f"DELETE from destination WHERE destinationID = '{args.d[0]}'")
             db.commit()
+            print(f"Confirming update...")
+            print(f"Destination {args.d[0]} deleted.")
         # otherwise give user options menu
         else:
             print(deleteMenu)
