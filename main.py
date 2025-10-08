@@ -14,30 +14,53 @@ def main():
     " \n Add Entity Commands: \n to add flight: add -f [flightID] [destinationID] [pilotID] [departureDate] [flightStatus] \n to add destination: add -d [destinationID] [destinationCity] [destinationCountry] \n "
 
     # subparser to do add commands
-    add_parser = subparsers.add_parser("add", help="add ")
-    add_parser.add_argument("-f", nargs=5, help="flight to create, provide all 5 attributes: add -f [flightID] [destinationID] [pilotID] [departureDate] [flightStatus]")
-    add_parser.add_argument("-d", nargs=3, help="destination to add, provide all 3 attributes: add -d [destinationID] [destinationCity] [destinationCountry]")
-    add_parser.add_argument("-p", nargs=3, help="pilot to create, provide both attributes, with only Forename and Surname: add -p [pilotID] [pilotForename] [pilotSurname]")
+    add_parser = subparsers.add_parser("add", help="add commansd")
+    add_parser.add_argument("-f", nargs=5, help="to add flight, provide all 5 attributes, use: add -f [flightID] [destinationID] [pilotID] [departureDate] [flightStatus]")
+    add_parser.add_argument("-d", nargs=3, help="to add destination, provide all 3 attributes, use: add -d [destinationID] [destinationCity] [destinationCountry]")
+    add_parser.add_argument("-p", nargs=3, help="to add pilot, provide both attributes and use only Forename and Surname, use: add -p [pilotID] [pilotForename] [pilotSurname]")
 
     # subparser to do view commands
     view_parser = subparsers.add_parser("view", help="use to view information from database")
-    view_parser.add_argument("-f", help="flight to view")
-    view_parser.add_argument("-p")
+    view_parser.add_argument("-flightID", required=False, help="flight to view")
+    view_parser.add_argument("-pilotID", required=False, help="pilotID to view")
+    view_parser.add_argument("-destina", required=False, help="destination to view")
+    view_parser.add_argument("-dd", required=False, help="flights departing on date to view")
+    view_parser.add_argument("-s", required=False, help="flight Status to view")
+    view_parser.add_argument("-c", required=False, help="view flights by country")
 
 
     # subparser to do update commands
-    update_parser = subparsers.add_parser("update", help="update commands: -fp [flightID] [pilotID] to update pilot \n -fd")
+    update_parser = subparsers.add_parser("update", help="update commands ")
     update_parser.add_argument("-fp", nargs=2, help="to update pilot use: update -fp [flightID] [pilotID]")
     update_parser.add_argument("-fd", nargs=2, help="to update destination use: update -fd [flightID] [destinationID]")
     update_parser.add_argument("-fs", nargs=2, help="to update flight status use: update -fs [flightID] [flightStatus]")
     update_parser.add_argument("-fdd", nargs=2, help="to update flight departure date (ensure departure date is in YYYY/MM/DD format) use: update -fdd [flightID] [departureDate]")
+    update_parser.add_argument("-pn", nargs=3, help="to update pilot name (only forename and surname) use: update -pn [pilotID] [pilotForename] [pilotSurname]")
 
     args = parser.parse_args()
     
     #commands
 
     if args.command == "view":
-        lol
+        
+        tables = ', '
+        columns = ', '
+        args = args.__dict__
+        columns.join([a+'=%s' for a in args if args[a]])
+        values = tuple([args[a] for a in args if args[a]])
+    #    if args.p:
+    #        print("1")
+    #    if args.d:
+    #        print("2")
+    #    if args.dd:
+    #        print("3")
+    #    if args.s:
+    #        print("4")
+    #    if args.c:
+    #        print("5")
+
+        statement = "SELECT * FROM flight WHERE " + columns
+        cursor.execute(statement,values)
 
     if args.command == "add":
         if args.f:
@@ -68,6 +91,8 @@ def main():
             for row in results:
                 print("Pilot ID: ", row[0])
                 print("Pilot Name: ", row[1])
+        else:
+            print("Add Menu: \n to create flight, provide all 5 attributes, use: add -f [flightID] [destinationID] [pilotID] [departureDate] [flightStatus] \n to add destination, provide all 3 attributes, use: add -d [destinationID] [destinationCity] [destinationCountry] \n to add pilot, provide both attributes and use only Forename and Surname, use: add -p [pilotID] [pilotForename] [pilotSurname]")
 
     if args.command == "update":
         if args.fp:
@@ -120,6 +145,16 @@ def main():
                 print("Pilot ID: ", row[2])
                 print("Departure Date: ", row[3])
                 print("Flight Status: ", row[4])
+        elif args.pn:
+            cursor.execute(f"UPDATE pilot SET pilotName = '{args.pn[1] + " " + args.pn[2]}' WHERE pilotID = '{args.pn[0]}'")
+            db.commit()
+            print("Confirming update...")
+            results = cursor.execute(f"SELECT * FROM pilot WHERE pilotID = '{args.pn[0]}'")
+            for row in results:
+                print("Pilot ID: ", row[0])
+                print("Pilot Name: ", row[1])
+        # else:
+            #print("Update Menu: \n to update pilot use: update -fp [flightID] [pilotID] \n to update destination use: update -fd [flightID] [destinationID] \n to update flight status use: update -fs [flightID] [flightStatus] \n to update flight departure date (ensure departure date is in YYYY/MM/DD format) use: update -fdd [flightID] [departureDate] \n to update pilot name (only forename and surname) use: update -pn [pilotID] [pilotForename] [pilotSurname]")
 
     else:
         print(intro)

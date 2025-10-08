@@ -91,6 +91,7 @@ db.commit()
 # Flight Retrieval
 # SELECT * FROM flight WHERE pilotID = 'MW463' AND flightStatus = 'Cancelled'
 # SELECT * FROM flight WHERE destinationID = 'MLE' and departure = '2025/12/25'
+# SELECT
 
 # Flight Schedule Modification
 # UPDATE flight SET flightStatus = 'Arrived' WHERE flightID = 'RF156'
@@ -99,7 +100,7 @@ db.commit()
 # UPDATE flight SET pilotID = 'BBB' WHERE flightID = 'JB007'
 
 # Destination Management
-# SELECT * FROM flight WHERE destinationID
+# SELECT * FROM flight WHERE destinationID = 'MLE'
 # SELECT * FROM flight, destination WHERE destination.destinationCountry = 'United States' AND flight.destinationID = destination.destinationID
 # INSERT INTO destination VALUES ('LGW','London','United Kingdown')
 
