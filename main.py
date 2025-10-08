@@ -9,7 +9,7 @@ def main():
     # cursor is how python interacts with sqlite3 database
     cursor = db.cursor()
 
-    #help menus
+    #help menus, avoid duplication when printing out
     createMenu = "\n Create Commands: " \
     "\n to add flight: python main.py add -f [flightID] [destinationID] [pilotID] [departureDate] [flightStatus] " \
     "\n to add destination: python main.py add -d [destinationID] [destinationCity] [destinationCountry] " \
@@ -66,7 +66,6 @@ def main():
     update_parser.add_argument("-pn", nargs=3, help="to update pilot name (only forename and surname) use: update -pn [pilotID] [pilotForename] [pilotSurname]")
 
     # subparser to do delete commands
-
     delete_parser = subparsers.add_parser("delete", help="delete commands ")
     delete_parser.add_argument("-f", nargs=1, help="to delete flight use: delete -f [flightID]")
     delete_parser.add_argument("-p", nargs=1, help="to delete pilot use: delete -p [pilotID]")
@@ -75,11 +74,10 @@ def main():
     # feeds arguments in from parser
     args = parser.parse_args()
     
-    #commands
-
-    
+    #commands, diffent queries/operations depending on command and arguments used
 
     if args.command == "add":
+        #add flight
         if args.f:
             cursor.execute(f"INSERT INTO flight VALUES ('{args.f[0]}','{args.f[1]}','{args.f[2]}','{args.f[3]}','{args.f[4]}')")
             db.commit()
@@ -91,6 +89,7 @@ def main():
                 print("Pilot ID: ", row[2])
                 print("Departure Date: ", row[3])
                 print("Flight Status: ", row[4])
+        # add destination
         elif args.d:
             cursor.execute(f"INSERT INTO destination VALUES ('{args.d[0]}','{args.d[1]}','{args.d[2]}')")
             db.commit()
@@ -100,6 +99,7 @@ def main():
                 print("Destination ID: ", row[0])
                 print("Destination City: ", row[1])
                 print("Destination Country: ", row[2])
+        # add pilot
         elif args.p:        
             cursor.execute(f"INSERT INTO pilot VALUES ('{args.p[0]}','{args.p[1] + " " + args.p[2]}')")
             db.commit()
@@ -108,32 +108,30 @@ def main():
             for row in results:
                 print("Pilot ID: ", row[0])
                 print("Pilot Name: ", row[1])
+        # if no argument inputted, give user menu
         else:
             print(createMenu)
 
     elif args.command == "view":
-
+        # summary by destination
         if args.sd:
-            # summary by destiantion
-            try:
-                results = cursor.execute("SELECT destinationID,COUNT(flightID) FROM flight GROUP BY destinationID ORDER BY COUNT(flightID) DESC")
-                for row in results:
-                    print(row)
-            except sqlite3.Error as e:
-                print("Error: " + e + "\n" + readMenu)
+            results = cursor.execute("SELECT destinationID,COUNT(flightID) FROM flight GROUP BY destinationID ORDER BY COUNT(flightID) DESC")
+            for row in results:
+                print(row)
+            print("Error: " + e + "\n" + readMenu)
+        #summary by pilot
         elif args.sp:
-            #summary by pilot
             results = cursor.execute("SELECT pilotID,COUNT(pilotID) FROM flight GROUP BY pilotID ORDER BY pilotID ASC")
             for row in results:
                 print(row)
+        #summary by departure date
         elif args.sdd:
-            #summary by departure date
             results = cursor.execute("SELECT departureDate,COUNT(departureDate) FROM flight GROUP BY departureDate")
             for row in results:
                 print(row)
+        # if optional summary arguments are not used, attempt to join together user inputs, if no inputs/error -> print out options menu for user
         else: 
             try:
-
                 # creates list of valid columns to be used in SQL query
                 valid_columns = ["flightID", "pilotID", "destinationID", "departureDate", "flightStatus"]
                 # creates dictionary of valid column headers from args: ignores irrelevant values like command that would be in NameSpace / none values
@@ -151,6 +149,7 @@ def main():
                 print(readMenu)
 
     elif args.command == "update":
+        # update flight's pilot with inputted flightID and pilotID
         if args.fp:
             cursor.execute(f"UPDATE flight SET pilotID = '{args.fp[1]}' WHERE flightID = '{args.fp[0]}'")
             print(f"updated flight '{args.fp[0]}' with new pilot '{args.fp[1]}'")
@@ -201,6 +200,7 @@ def main():
                 print("Pilot ID: ", row[2])
                 print("Departure Date: ", row[3])
                 print("Flight Status: ", row[4])
+        # update pilot name with provided forename and surname
         elif args.pn:
             cursor.execute(f"UPDATE pilot SET pilotName = '{args.pn[1] + " " + args.pn[2]}' WHERE pilotID = '{args.pn[0]}'")
             db.commit()
@@ -209,24 +209,29 @@ def main():
             for row in results:
                 print("Pilot ID: ", row[0])
                 print("Pilot Name: ", row[1])
+        # if no inputs, give user options
         else:
             print(updateMenu)
     elif args.command == "delete":
+        # delete flight
         if args.f:
             cursor.execute(f"DELETE from flight WHERE flightID = '{args.f[0]}'")
             db.commit()
+        # delete pilot
         elif args.p:
             cursor.execute(f"DELETE FROM pilot WHERE pilotID = '{args.p[0]}'")
             db.commit()    
+        # delete destination
         elif args.d:
             cursor.execute(f"DELETE from destination WHERE destinationID = '{args.d[0]}'")
             db.commit()
+        # otherwise give user options menu
         else:
             print(deleteMenu)
-    
+    # if no command used, give user options menu
     else:
         print(intro)
-
+    # close connection to database
     db.close()
 
 #ensures that script can run smoothly when closed and reopened
